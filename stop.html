@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Angular Stopwatch</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular.min.js"></script>
+  <script>
+    var app = angular.module('stopwatchApp', []);
+    
+    app.controller('StopwatchController', function ($scope, $interval) {
+      $scope.currentTime = new Date(0, 0, 0, 0, 0, 0, 0);
+      var intervalPromise;
+
+      $scope.start = function () {
+        if (!intervalPromise) {
+          intervalPromise = $interval(updateTime, 1000);
+        }
+      };
+
+      $scope.stop = function () {
+        if (intervalPromise) {
+          $interval.cancel(intervalPromise);
+          intervalPromise = undefined;
+        }
+      };
+
+      $scope.reset = function () {
+        $scope.stop();
+        $scope.currentTime = new Date(0, 0, 0, 0, 0, 0, 0);
+      };
+
+      function updateTime() {
+        $scope.currentTime.setSeconds($scope.currentTime.getSeconds() + 1);
+      }
+    });
+  </script>
+</head>
+<link rel="stylesheet" href="angular.css">
+<body ng-app="stopwatchApp">
+  <div ng-controller="StopwatchController">
+    <h1 class="head">Stop Watch:</h1>
+    <h1 class="hea">{{ currentTime | date: 'HH:mm:ss' }}</h1>
+    <button class="btone" ng-click="start()">Start</button>
+    <button class="btonee"ng-click="stop()">Stop</button>
+    <button class="btoneee"ng-click="reset()">Reset</button>
+  </div>
+</body>
+</html>
